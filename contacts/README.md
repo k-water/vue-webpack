@@ -1,4 +1,4 @@
-# trytwo
+# vue-webpack
 
 > A Vue.js project
 
