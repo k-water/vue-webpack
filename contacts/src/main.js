@@ -3,11 +3,23 @@
 import Vue from 'vue'
 import App from './App'
 import Element from 'element-ui'
-// import 'element-ui/lib/theme-default/index.css'
-Vue.use(Element)
+import VueRouter from 'vue-router'
 
-/* eslint-disable no-new */
+import All from './router/All'
+
+Vue.use(Element)
+Vue.use(VueRouter)
+
+const routes = [
+  { path: '/all', component: All }
+]
+
+const router = new VueRouter({ //创建路由实例
+  routes
+})
+
 new Vue({
+  router: router,
   el: '#app',
   render: h => h(App)
 })

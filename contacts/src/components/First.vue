@@ -18,6 +18,13 @@
           <img :src=img alt="" style="float: right;">
         </div>
       </el-col>
+      <el-col :span="24">
+        <div class="grid-content-2 bg-blue">
+          <span>
+            <a href="javascript:;">联系人</a>
+          </span>
+        </div>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -32,16 +39,26 @@
     },
     methods: {
       handleClick() {
-        alert("您输入的内容是" + this.msg)
-        this.msg = ''
+        if (this.msg === '') {
+          alert("输入的内容不能为空...")
+        } else {
+          alert("您输入的内容是: " + this.msg)
+          this.msg = ''
+        }
       }
     }
   }
 </script>
 <style lang="scss">
-  @import url("//unpkg.com/element-ui/lib/theme-default/index.css");
+  body {
+    font: normal 16px Roboto,arial,sans-serif;
+  }
   img {
     max-width: 100%;
+  }
+  
+  .bg-blue {
+    background: #0288d1;
   }
   
   .btn {
@@ -83,6 +100,19 @@
     padding: 12px 20px;
     img {
       height: 36px;
+    }
+  }
+  
+  .grid-content-2 {
+    height: 30px;
+    line-height: 30px;
+    padding: 7px;
+    a {
+      text-decoration: none;
+      color: #fff;
+      padding-left: 20px;
+      font-size: 20px;
+      display: inline-block;
     }
   }
   
