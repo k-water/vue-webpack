@@ -6,18 +6,15 @@
           <img :src=img alt="">
         </div>
       </el-col>
-      <el-col :span="16">
+      <el-col :span="15">
         <div class="grid-content bg-purple-light">
           <el-input placeholder="请输入你要寻找的内容..." v-model="msg">
             <el-button slot="append" class="btn" icon="search" @click="handleClick"></el-button>
           </el-input>
         </div>
       </el-col>
-      <el-col :span="4">
-        <div class="grid-content bg-purple-light">
-          <img :src=img alt="" style="float: right;">
-        </div>
-      </el-col>
+
+      <Add></Add>
       <el-col :span="24">
         <div class="grid-content-2 bg-blue">
           <span>
@@ -29,6 +26,7 @@
   </div>
 </template>
 <script>
+  import Add from '../components/Add'
   export default {
     name: 'first',
     data() {
@@ -36,6 +34,9 @@
         img: require('../assets/logo.png'),
         msg: ''
       }
+    },
+    components: {
+      Add
     },
     methods: {
       handleClick() {
@@ -45,6 +46,9 @@
           alert("您输入的内容是: " + this.msg)
           this.msg = ''
         }
+      },
+      test() {
+        console.log(this.$children)
       }
     }
   }

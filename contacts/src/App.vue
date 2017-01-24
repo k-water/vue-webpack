@@ -2,10 +2,11 @@
   <div id="app">
     <First></First>
     <Sider></Sider>
-            <router-view
-                keep-alive
-                transition="fade"
-                transition-mode='out-in'></router-view>
+    <!--路由出口-->
+    <router-view
+        keep-alive
+        transition="fade"
+        transition-mode='out-in'></router-view>
   </div>
 </template>
 

@@ -5,13 +5,13 @@ import App from './App'
 import Element from 'element-ui'
 import VueRouter from 'vue-router'
 
-import All from './router/All'
+import Home from './router/Home'
 
 Vue.use(Element)
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/all', component: All }
+  { path: '/', component: Home }
 ]
 
 const router = new VueRouter({ //创建路由实例
