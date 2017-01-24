@@ -1,6 +1,6 @@
 <template>
   <div id="dialog">
-    <el-col :span="5" style="background: #e5e9f2">
+    <el-col :span="5" style="background: #e5e9f2" class="pos">
       <div class="grid-content bg-purple-light" style="float: right">
         <el-button type="primary" @click="openDialog" icon="edit">Add</el-button>
       </div>
@@ -15,13 +15,13 @@
           <el-input v-model="form.email" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="phoneNumber">
-          <el-input v-model.number="form.phoneNumber" auto-complete="off"></el-input>
+          <el-input v-model="form.phoneNumber" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="家庭电话" prop="homeNumber" required>
           <el-input v-model.number="form.homeNumber" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="生日" prop="birthday" required>
-           <el-date-picker type="date" placeholder="选择日期" style="width: 70%;" v-model="form.birthday"></el-date-picker>
+           <el-input format="yyyy-MM-dd" type="date" placeholder="选择日期" style="width: 70%;" v-model="form.birthday"></el-input>
         </el-form-item>
         <el-form-item label="个人主页" prop="site">
           <el-input v-model="form.site" autocomplete="off"></el-input>
@@ -32,7 +32,7 @@
       </el-form>
       
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="cancelDialog">取 消</el-button>
         <el-button type="primary" @click="sureDialog">确 定</el-button>
       </span>
     </el-dialog>
@@ -62,7 +62,6 @@
           ],
           phoneNumber: [
             { required: true, message: '请填写手机号码', trigger: 'blur' },
-            { type: 'number', message: '请输入11位手机号码', trigger: 'blur, change' }
           ],
           site: [
             { required: true, message: '请输入一个网址', trigger: 'blur' }
@@ -73,11 +72,28 @@
     methods: {
       openDialog() {
         this.dialogVisible = true
-        this.$emit('onpenDialog')
       },
       sureDialog() {
-        console.log(this.form.name)
+        this.$emit('addContacts')
+        this.dialogVisible = false
+      },
+      cancelDialog() {
+        this.dialogVisible = false
+        this.form.name = ''
+        this.form.email = ''
+        this.form.phoneNumber = ''
+        this.form.homeNumber = ''
+        this.form.birthday = ''
+        this.form.address = ''
+        this.form.site = ''
       }
     }
   }
 </script>
+<style lang="scss">
+  .pos {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+</style>

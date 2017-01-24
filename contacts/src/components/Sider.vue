@@ -33,7 +33,7 @@
 </script>
 <style lang="scss">
   .sider-left {
-    padding: 40px;
+    padding: 30px 10px 0 30px;
     .el-menu {
       background: whitesmoke;
       color: black;

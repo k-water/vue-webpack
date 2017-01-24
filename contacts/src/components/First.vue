@@ -13,8 +13,6 @@
           </el-input>
         </div>
       </el-col>
-
-      <Add></Add>
       <el-col :span="24">
         <div class="grid-content-2 bg-blue">
           <span>
@@ -26,7 +24,6 @@
   </div>
 </template>
 <script>
-  import Add from '../components/Add'
   export default {
     name: 'first',
     data() {
@@ -36,7 +33,6 @@
       }
     },
     components: {
-      Add
     },
     methods: {
       handleClick() {
