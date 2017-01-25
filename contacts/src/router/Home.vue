@@ -1,35 +1,32 @@
 <template>
   <div id="home">
-   <el-col :span="17">
-    <el-table
-      :data="data">
-      <el-table-column type="expand">
-        <template scope="props">
-          <p>省: {{ props.row.province }}</p>
-          <p>市: {{ props.row.city }}</p>
-          <p>住址: {{ props.row.detailAddress }}</p>
-          <p>邮编: {{ props.row.zip }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="姓名"
-        prop="name">
-      </el-table-column>
-      <el-table-column
-        label="邮箱"
-        prop="email">
-      </el-table-column>
-      <el-table-column
-        label="生日"
-        prop="birthday">
-      </el-table-column>
-      <el-table-column
-        label="电话"
-        prop="phoneNumber">
-      </el-table-column>
-    </el-table>
-   </el-col>
-   <Add ref="add" @addContacts="addContacts"></Add>
+    <el-col :span="17">
+      <el-table :data="contacts">
+        <el-table-column type="expand">
+          <template scope="props">
+            <p>省: {{ props.row.province }}</p>
+            <p>市: {{ props.row.city }}</p>
+            <p>住址: {{ props.row.detailAddress }}</p>
+            <p>邮编: {{ props.row.zip }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="姓名" prop="name">
+        </el-table-column>
+        <el-table-column label="邮箱" prop="email">
+        </el-table-column>
+        <el-table-column label="生日" prop="birthday">
+        </el-table-column>
+        <el-table-column label="电话" prop="phoneNumber">
+        </el-table-column>
+        <el-table-column label="操作">
+          <template scope="scope">
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-col>
+    <Add ref="add" @add="addContacts"></Add>
   </div>
 </template>
 <script>
@@ -37,7 +34,7 @@
   export default {
     data() {
       return {
-        data: [{
+        contacts: [ {
           birthday: '2017-1-23',
           name: '林梓标',
           province: '广东',
@@ -49,7 +46,7 @@
           zip: 510642
         }, {
           birthday: '2017-1-22',
-          name: '林梓标',
+          name: 'water',
           province: '广东',
           city: '广州市',
           address: '广东省广州市天河区华南农业大学',
@@ -59,7 +56,7 @@
           zip: 510642
         }, {
           birthday: '2017-1-24',
-          name: '林梓标',
+          name: 'coding',
           province: '广东',
           city: '广州市',
           address: '广东省广州市天河区华南农业大学',
@@ -69,7 +66,7 @@
           zip: 510642
         }, {
           birthday: '2017-1-21',
-          name: '林梓标',
+          name: 'boy',
           province: '广东',
           city: '广州市',
           address: '广东省广州市天河区华南农业大学',
@@ -85,8 +82,19 @@
     },
     methods: {
       addContacts() {
-        this.data.push(this.$refs.add.form)
-        console.log(this.$refs.add.form.birthday.toString())
+        let tmpData = this.$refs.add.form
+        tmpData = Object.assign({}, tmpData)
+        this.$nextTick(() => {
+          this.contacts.push(tmpData)
+        })
+      },
+      handleDelete(index, row) {
+        this.contacts.splice(index, 1);
+      },
+      handleEdit(index, row) {
+        let child = this.$refs.add
+        child.editDialog()
+        child.setFormData(row)
       }
     }
   }
