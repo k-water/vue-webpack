@@ -14,8 +14,6 @@
         </el-table-column>
         <el-table-column label="邮箱" prop="email">
         </el-table-column>
-        <el-table-column label="生日" prop="birthday">
-        </el-table-column>
         <el-table-column label="电话" prop="phoneNumber">
         </el-table-column>
         <el-table-column label="操作">
@@ -90,6 +88,9 @@
       },
       handleDelete(index, row) {
         this.contacts.splice(index, 1);
+      },
+      getRow(index, row) {
+        
       },
       handleEdit(index, row) {
         let child = this.$refs.add

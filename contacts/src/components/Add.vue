@@ -57,15 +57,6 @@
           address: '',
           site: ''
         },
-        defaultForm: {
-          name: '',
-          email: '',
-          phoneNumber: '',
-          homeNumber: '',
-          birthday: '',
-          address: '',
-          site: ''
-        },
         rules: {
           email: [
             { required: true, message: '请输入邮箱地址', trigger: 'blur' },
@@ -102,6 +93,9 @@
       changeInfo() {
         this.dialogVisible = false
       },
+      // 】
+
+      
       setFormData(row) {
         this.form = Object.assign({}, row)
       },
@@ -113,7 +107,6 @@
       },
       cancelEdit() {
         this.dialogVisible = false
-        console.log('cancel')
       }
     }
   }
