@@ -378,6 +378,20 @@ textarea {
   transition: all .3s ease-out;
 }
 
+.i-up-down .i-up-r {
+  right: 0;
+  -ms-transform: rotate(40deg);
+  transform: rotate(40deg);
+  transition: transform .3s ease-out;
+}
+
+.i-up-down .i-up-l {
+  left: 0;
+  -ms-transform: rotate(-40deg);
+  transform: rotate(-40deg);
+  transition: all .3s ease-out;
+}
+
 .select-self {
   position: relative;
   display: inline-block;
@@ -506,5 +520,21 @@ textarea {
 .up-down-btn.open .i-up-down-r {
   -ms-transform: rotate(40deg);
   transform: rotate(40deg);
+  transition: all .3s ease-out;
+}
+
+.select-self:hover .i-up-l,
+.up-down-btn:hover .i-up-l,
+.up-down-btn.open .i-up-l {
+  -ms-transform: rotate(40deg);
+  transform: rotate(40deg);
+  transition: all .3s ease-out;
+}
+
+.select-self:hover .i-up-r,
+.up-down-btn:hover .i-up-r,
+.up-down-btn.open .i-up-r {
+  -ms-transform: rotate(-40deg);
+  transform: rotate(-40deg);
   transition: all .3s ease-out;
 }

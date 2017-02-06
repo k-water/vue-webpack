@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from './App'
+import Address from './components/address'
 import VueResource from 'vue-resource'
 // import VueRouter from 'vue-router'
 // import address from './components/address'
@@ -10,16 +10,7 @@ Vue.filter('money', (value, type) => {
   return '￥' + value.toFixed(2) + type
 })
 
-// const router = new VueRouter({
-//   mode: 'history',
-//   base: __dirname,
-//   routes: [{
-//     path: '/address',
-//     component: address
-//   }]
-// })
-
 new Vue({
   el: '#app',
-  render: h => h(App)
+  render: h => h(Address)
 })

@@ -90,7 +90,7 @@
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a href="javascript:;" class="item-edit-btn">
+                    <a href="javascript:;" class="item-edit-btn" @click="delConfirm(item)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -119,35 +119,33 @@
           </div>
           <div class="cart-foot-r">
             <div class="item-total">
-              总价: <span class="total-price"></span>
+              总价: <span class="total-price"> {{totalMoney | money('元')}} </span>
             </div>
             <div class="next-btn-wrap">
-              <a href="address.html" class="btn btn--red">结账</a>
+              <a href="javascipt:;" class="btn btn--red">结账</a>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="md-modal modal-msg md-modal-transition" id="showModal">
+    <div class="md-modal modal-msg md-modal-transition" id="showModal" :class="{'md-show': delFlag}">
       <div class="md-modal-inner">
         <div class="md-top">
-          <button class="md-close">关闭</button>
+          <button class="md-close" @click="delFlag=false">关闭</button>
         </div>
         <div class="md-content">
           <div class="confirm-tips">
             <p id="cusLanInfo" lan="Cart.Del.Confirm">你确认删除此订单信息吗?</p>
           </div>
           <div class="btn-wrap col-2">
-            <button class="btn btn--m" id="btnModalConfirm">Yes</button>
-            <button class="btn btn--m btn--red" id="btnModalCancel">No</button>
+            <button class="btn btn--m" id="btnModalConfirm" @click="delProduct">Yes</button>
+            <button class="btn btn--m btn--red" id="btnModalCancel" @click="delFlag=false">No</button>
           </div>
         </div>
       </div>
     </div>
-  <!--
-        <div class="md-overlay" id="showOverLay"></div>
-        -->
+    <div class="md-overlay" id="showOverLay" v-if="delFlag"></div>
   </div>
 </template>
 
@@ -161,7 +159,9 @@
       return {
         productList: [],
         totalMoney: 0,
-        checkAllFlag: false
+        checkAllFlag: false,
+        delFlag: false,
+        curProduct: []
       }
     },
     mounted: function(){
@@ -186,6 +186,7 @@
             item.productQuentity = 1
           }
         }
+        this.calcTotalPrice()
       },
       selectProduct(item) {
         if(typeof item.checked === 'undefined') {
@@ -194,6 +195,7 @@
         }else {
           item.checked = !item.checked
         }
+        this.calcTotalPrice()
       },
       checkAll(flag) {
         this.checkAllFlag = flag
@@ -205,6 +207,24 @@
             item.checked = this.checkAllFlag
           }
         })
+        this.calcTotalPrice()
+      },
+      calcTotalPrice() {
+        this.totalMoney = 0
+        this.productList.forEach((item, index) => {
+          if(item.checked) {
+            this.totalMoney += item.productPrice * item.productQuentity
+          }
+        })
+      },
+      delConfirm(item) {
+        this.delFlag = true
+        this.curProduct = item
+      },
+      delProduct() {
+        let index = this.productList.indexOf(this.curProduct)
+        this.productList.splice(index, 1)
+        this.delFlag = false
       }
     },
     filters: {
