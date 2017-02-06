@@ -47,7 +47,7 @@
               <li v-for="(item, index) in productList">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a href="javascipt:;" class="item-check-btn">
+                    <a href="javascipt:;" class="item-check-btn" :class="{'check': item.checked}" @click="selectProduct(item)">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
                       </svg>
@@ -107,14 +107,14 @@
           <div class="cart-foot-l">
             <div class="item-all-check">
               <a href="javascipt:;">
-                <span class="item-check-btn">
+                <span class="item-check-btn" :class="{'check': checkAllFlag}" @click="checkAll(true)">
                   <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
                 </span>
                 <span>全选</span>
               </a>
             </div>
             <div class="item-all-del">
-              <a href="javascipt:;" class="item-del-btn">取消全选</a>
+              <a href="javascipt:;" class="item-del-btn" @click="checkAll(false)">取消全选</a>
             </div>
           </div>
           <div class="cart-foot-r">
@@ -160,7 +160,8 @@
     data() {
       return {
         productList: [],
-        totalMoney: 0
+        totalMoney: 0,
+        checkAllFlag: false
       }
     },
     mounted: function(){
@@ -185,6 +186,25 @@
             item.productQuentity = 1
           }
         }
+      },
+      selectProduct(item) {
+        if(typeof item.checked === 'undefined') {
+          // 局部注册
+          this.$set(item, 'checked', true)
+        }else {
+          item.checked = !item.checked
+        }
+      },
+      checkAll(flag) {
+        this.checkAllFlag = flag
+        this.productList.forEach((item, index) => {
+          if(typeof item.checked === 'undefined') {
+            // 局部注册
+           this.$set(item, 'checked', this.checkAllFlag)
+          }else {
+            item.checked = this.checkAllFlag
+          }
+        })
       }
     },
     filters: {
