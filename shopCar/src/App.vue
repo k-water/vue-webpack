@@ -44,7 +44,7 @@
               </ul>
             </div>
             <ul class="cart-item-list">
-              <li v-for="item in productList">
+              <li v-for="(item, index) in productList">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
                     <a href="javascipt:;" class="item-check-btn">
@@ -54,7 +54,7 @@
                     </a>
                   </div>
                   <div class="cart-item-pic">
-                    <img>
+                    <img :src="item.productImage" alt="">
                   </div>
                   <div class="cart-item-title">
                     <div class="item-name">
@@ -69,17 +69,15 @@
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price">
-                    {{item.productPrice}}
-                  </div>
+                  <div class="item-price"> {{item.productPrice | formatMoney}} </div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="quentity">
-                        <a href="javascript:;">-</a>
-                        <input type="text" v-model="item.productQuentity" disabled>
-                        <a href="javascript:;">+</a>
+                        <a href="javascript:;" @click="changeMoney(item, -1)">-</a>
+                        <input type="text" v-model="item.productQuentity" disabled/>
+                        <a href="javascript:;" @click="changeMoney(item, 1)">+</a>
                       </div>
                     </div>
                     <div class="item-stock">有货</div>
@@ -87,7 +85,7 @@
                 </div>
                 <div class="cart-tab-4">
                   <div class="item-price-total">
-                    {{item.productPrice * item.productQuentity}}
+                    {{item.productPrice * item.productQuentity | money('元')}}
                   </div>
                 </div>
                 <div class="cart-tab-5">
@@ -110,8 +108,8 @@
             <div class="item-all-check">
               <a href="javascipt:;">
                 <span class="item-check-btn">
-                              <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
-                          </span>
+                  <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
+                </span>
                 <span>全选</span>
               </a>
             </div>
@@ -174,17 +172,35 @@
       cartView() {
         this.$http.get('../static/data/cartData.json').then(res => {
           this.productList = res.body.result.list;
+        },error => {
+          console.log(err)
         })
+      },
+      changeMoney(item, way) {
+        if(way > 0) {
+          item.productQuentity++
+        }else {
+          item.productQuentity--
+          if(item.productQuentity <=1) {
+            item.productQuentity = 1
+          }
+        }
+      }
+    },
+    filters: {
+      formatMoney(value) {
+        return '￥' + value.toFixed(2)
       }
     }
   }
 </script>
 
 <style>
+  * {
+    font-family: "Microsoft Yahei UI"
+  }
   .quentity input{
     width: 40px;
-    padding: 5px 10px;
-    color: #000;
     text-align: center;
   }
 </style>
