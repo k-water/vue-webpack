@@ -1,5 +1,13 @@
 <template>
   <div id="home">
+    <!--添加按钮 点击触发dialog-->
+    <el-col :span="5" style="background: #e5e9f2" class="pos">
+      <div class="grid-content bg-purple-light" style="float: right">
+        <el-button type="primary" @click="openDialog" icon="edit">Add</el-button>
+      </div>
+    </el-col>
+
+    <!--Table展示数据-->
     <el-col :span="17">
       <el-table :data="contacts">
         <el-table-column type="expand">
@@ -24,78 +32,132 @@
         </el-table-column>
       </el-table>
     </el-col>
-    <Add ref="add" @add="addContacts"></Add>
+
+    <!--dialog模拟框添加数据-->
+    <el-dialog title="添加联系人" v-model="dialogVisible" size="small">
+      <el-form :model="form" ref="from" :label-position="labelPosition" label-width="120px">
+        <el-form-item label="姓名" required>
+          <el-input v-model="form.name" auto-complete="off">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="电子邮箱" prop="email">
+          <el-input v-model="form.email" auto-complete="off">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="手机号码" prop="phoneNumber">
+          <el-input v-model="form.phoneNumber" auto-complete="off">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="家庭电话" prop="homeNumber" required>
+          <el-input v-model.number="form.homeNumber" auto-complete="off">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="生日" prop="birthday" required>
+          <el-input type="date" placeholder="选择日期" style="width: 70%;" v-model="form.birthday">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="个人主页" prop="site">
+          <el-input v-model="form.site" autocomplete="off">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="地址" prop="address" required>
+          <el-input type="textarea" v-model="form.address" style="width: 70%;" auto-complete="off">
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible=false" v-if="sure">
+          取 消
+        </el-button>
+        <el-button @click="dialogVisible=false" type="info" v-else>
+          取 消
+        </el-button>
+        <el-button type="primary" @click="addContacts" v-if="sure">
+          确 定
+        </el-button>
+        <el-button type="warning" @click="dialogVisible=false" v-else>
+          修 改
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-  import Add from '../components/Add.vue'
   export default {
+    name: 'home',
     data() {
       return {
-        contacts: [ {
-          birthday: '2017-1-23',
-          name: '林梓标',
-          province: '广东',
-          city: '广州市',
-          address: '广东省广州市天河区华南农业大学',
-          detailAddress: '天河区华南农业大学',
-          phoneNumber: '13602803974',
-          email: '625592890@qq.com',
-          zip: 510642
-        }, {
-          birthday: '2017-1-22',
+        contacts: [],
+        dialogVisible: false,
+        dialogFormVisible: false,
+        labelPosition: 'left',
+        sure: 'true',
+        currentForm: {},
+        changeForm: {},
+        form: {
           name: 'water',
-          province: '广东',
-          city: '广州市',
-          address: '广东省广州市天河区华南农业大学',
-          detailAddress: '天河区华南农业大学',
-          phoneNumber: '13602803974',
-          email: '625592890@qq.com',
-          zip: 510642
-        }, {
-          birthday: '2017-1-24',
-          name: 'coding',
-          province: '广东',
-          city: '广州市',
-          address: '广东省广州市天河区华南农业大学',
-          detailAddress: '天河区华南农业大学',
-          phoneNumber: '13602803974',
-          email: '625592890@qq.com',
-          zip: 510642
-        }, {
-          birthday: '2017-1-21',
-          name: 'boy',
-          province: '广东',
-          city: '广州市',
-          address: '广东省广州市天河区华南农业大学',
-          detailAddress: '天河区华南农业大学',
-          phoneNumber: '13602803974',
-          email: '625592890@qq.com',
-          zip: 510642
-        }]
+          email: '',
+          phoneNumber: '',
+          homeNumber: '',
+          birthday: '',
+          address: '',
+          site: ''
+        },
       }
     },
-    components: {
-      Add
+    mounted () {
+      this.$nextTick(() => {
+        this.init()
+      })
     },
     methods: {
-      addContacts() {
-        let tmpData = this.$refs.add.form
-        tmpData = Object.assign({}, tmpData)
-        this.$nextTick(() => {
-          this.contacts.push(tmpData)
+      // 数据加载初始化
+      init() {
+        this.$http.get('../../static/data/info.json').then((res) => {
+          this.contacts = res.body
+        },error => {
+          console.log(error)
         })
       },
+
+      // 点击Add打开Dialog 并清空上一次的数据
+      openDialog() {
+        this.dialogVisible = true
+        this.sure = true
+        for (let value in this.form) {
+          this.form[value] = ''
+        }
+      },
+
+      //添加新的数据
+      addContacts() {
+        this.dialogVisible = false
+        this.currentForm = this.form
+        this.currentForm = Object.assign({}, this.currentForm)
+        this.$nextTick(() => {
+          this.contacts.push(this.currentForm)
+        })
+      },
+
+      // 删除一行数据
       handleDelete(index, row) {
-        this.contacts.splice(index, 1);
+        if(confirm('您确定删除此联系人吗？')) {
+          this.contacts.splice(index, 1);
+        }
       },
-      getRow(index, row) {
-        
-      },
+
+      //编辑一行数据
       handleEdit(index, row) {
-        let child = this.$refs.add
-        child.editDialog()
-        child.setFormData(row)
+        this.sure = false
+        this.dialogVisible = true        
+        this.form = row
+        this.changeForm = row
+      },
+
+      // 修改一行数据
+      changeContact() {
+        this.dialogVisible = false
+        this.form = this.changeForm
       }
     }
   }
@@ -103,5 +165,10 @@
 <style lang="scss">
   #home {
     padding: 30px 30px 0 20px;
+  }
+  .pos {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 </style>

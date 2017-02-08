@@ -1,8 +1,8 @@
 <template>
   <div id="dialog">
     <el-col :span="5" style="background: #e5e9f2" class="pos">
-<div class="grid-content bg-purple-light" style="float: right">
-<el-button type="primary" @click="openDialog" icon="edit">Add</el-button>
+    <div class="grid-content bg-purple-light" style="float: right">
+    <el-button type="primary" @click="openDialog" icon="edit">Add</el-button>
 </div>
 </el-col>
 
@@ -93,9 +93,6 @@
       changeInfo() {
         this.dialogVisible = false
       },
-      // 】
-
-      
       setFormData(row) {
         this.form = Object.assign({}, row)
       },

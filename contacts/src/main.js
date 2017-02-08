@@ -4,12 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import Element from 'element-ui'
 import VueRouter from 'vue-router'
-
+import VueResource from 'vue-resource'
 import Home from './router/Home'
 
 Vue.use(Element)
 Vue.use(VueRouter)
-
+Vue.use(VueResource)
 const routes = [
   { path: '/', component: Home }
 ]

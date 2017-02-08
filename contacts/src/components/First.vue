@@ -42,9 +42,6 @@
           alert("您输入的内容是: " + this.msg)
           this.msg = ''
         }
-      },
-      test() {
-        console.log(this.$children)
       }
     }
   }
