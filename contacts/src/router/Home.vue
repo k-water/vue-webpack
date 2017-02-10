@@ -75,7 +75,7 @@
         <el-button type="primary" @click="addContacts" v-if="sure">
           确 定
         </el-button>
-        <el-button type="warning" @click="dialogVisible=false" v-else>
+        <el-button type="warning" @click="changeContact" v-else>
           修 改
         </el-button>
       </span>
@@ -94,6 +94,7 @@
         sure: 'true',
         currentForm: {},
         changeForm: {},
+        currentIndex: '',
         form: {
           name: 'water',
           email: '',
@@ -104,6 +105,8 @@
           site: ''
         },
       }
+    },
+    created () {
     },
     mounted () {
       this.$nextTick(() => {
@@ -149,16 +152,52 @@
       //编辑一行数据
       handleEdit(index, row) {
         this.sure = false
-        this.dialogVisible = true        
-        this.form = row
-        this.changeForm = row
+        this.dialogVisible = true    
+        this.form = this.initItemForUpdate(row)
+        this.currentIndex = index
       },
 
       // 修改一行数据
       changeContact() {
+        for(let k = 0; k < this.contacts.length; k++) {
+          if(typeof this.contacts[k]['index'] === 'undefined') {
+            this.$set(this.contacts[k], 'index', k)
+          }
+        }
+        for (let i = 0; i < this.contacts.length; i++) {
+          // 根据主键查找要修改的数据，然后将this.item数据更新到this.contacts[i]
+          if (this.contacts[i]['index'] === this.currentIndex) {
+            for (let j in this.form) {
+              this.contacts[i][j] = this.form[j]
+            }
+            break;
+          }
+        }
         this.dialogVisible = false
-        this.form = this.changeForm
-      }
+        this.form = {}
+      },
+
+      // 对象深拷贝
+      initItemForUpdate(p, c) {
+        c = c || {};
+        for (var i in p) {
+          // 属性i是否为p对象的自有属性
+          if (p.hasOwnProperty(i)) {
+            // 属性i是否为复杂类型
+            if (typeof p[ i ] === 'object') {
+              // 如果p[i]是数组，则创建一个新数组
+              // 如果p[i]是普通对象，则创建一个新对象
+              c[ i ] = Array.isArray(p[ i ]) ? [] : {};
+              // 递归拷贝复杂类型的属性
+              this.initItemForUpdate(p[ i ], c[ i ]);
+            } else {
+              // 属性是基础类型时，直接拷贝
+              c[ i ] = p[ i ];
+            }
+          }
+        }
+        return c;
+      },
     }
   }
 </script>
