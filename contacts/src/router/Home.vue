@@ -1,5 +1,14 @@
 <template>
   <div id="home">
+
+    <el-col :span="15" class="searchPos">
+      <div class="grid-content bg-purple-light">
+        <el-input placeholder="请输入你要寻找的内容..." v-model="filtersKey">
+          <el-button slot="append" class="btn" icon="search"></el-button>
+        </el-input>
+       </div>
+    </el-col>
+
     <!--添加按钮 点击触发dialog-->
     <el-col :span="5" style="background: #e5e9f2" class="pos">
       <div class="grid-content bg-purple-light" style="float: right">
@@ -8,7 +17,7 @@
     </el-col>
 
     <!--Table展示数据-->
-    <el-col :span="17">
+    <el-col :span="20">
       <el-table :data="contacts">
         <el-table-column type="expand">
           <template scope="props">
@@ -16,9 +25,10 @@
             <p>市: {{ props.row.city }}</p>
             <p>住址: {{ props.row.detailAddress }}</p>
             <p>邮编: {{ props.row.zip }}</p>
+            <p>生日：{{ props.row.birthday }}</p>
           </template>
         </el-table-column>
-        <el-table-column label="姓名" prop="name">
+        <el-table-column label="姓名" prop="name" :filters="[{text: filtersKey, value: filtersKey}]">
         </el-table-column>
         <el-table-column label="邮箱" prop="email">
         </el-table-column>
@@ -32,10 +42,10 @@
         </el-table-column>
       </el-table>
     </el-col>
-
+    
     <!--dialog模拟框添加数据-->
     <el-dialog title="添加联系人" v-model="dialogVisible" size="small">
-      <el-form :model="form" ref="from" :label-position="labelPosition" label-width="120px">
+      <el-form :model="form" :rules="rules" ref="from" :label-position="labelPosition" label-width="120px">
         <el-form-item label="姓名" required>
           <el-input v-model="form.name" auto-complete="off">
           </el-input>
@@ -53,8 +63,11 @@
           </el-input>
         </el-form-item>
         <el-form-item label="生日" prop="birthday" required>
-          <el-input type="date" placeholder="选择日期" style="width: 70%;" v-model="form.birthday">
+        <!--
+          <el-input type="text" placeholder="选择日期" style="width: 70%;" v-model="form.birthday">
           </el-input>
+          -->
+          <el-date-picker type="date" placeholder="选择日期" v-model="form.birthday" style="width: 70%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="个人主页" prop="site">
           <el-input v-model="form.site" autocomplete="off">
@@ -93,10 +106,10 @@
         labelPosition: 'left',
         sure: 'true',
         currentForm: {},
-        changeForm: {},
         currentIndex: '',
+        filtersKey: '',
         form: {
-          name: 'water',
+          name: '',
           email: '',
           phoneNumber: '',
           homeNumber: '',
@@ -104,9 +117,19 @@
           address: '',
           site: ''
         },
+        rules: {
+          email: [
+            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+            { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur, change' }
+          ],
+          phoneNumber: [
+            { required: true, message: '请填写手机号码', trigger: 'blur' },
+          ],
+          site: [
+            { required: true, message: '请输入一个网址', trigger: 'blur' }
+          ]
+        }
       }
-    },
-    created () {
     },
     mounted () {
       this.$nextTick(() => {
@@ -165,7 +188,7 @@
           }
         }
         for (let i = 0; i < this.contacts.length; i++) {
-          // 根据主键查找要修改的数据，然后将this.item数据更新到this.contacts[i]
+          // 根据主键查找要修改的数据，然后将this.form数据更新到this.contacts[i]
           if (this.contacts[i]['index'] === this.currentIndex) {
             for (let j in this.form) {
               this.contacts[i][j] = this.form[j]
@@ -173,11 +196,14 @@
             break;
           }
         }
+        console.log(this.contacts)
+        // 关闭dialog
         this.dialogVisible = false
         this.form = {}
       },
 
       // 对象深拷贝
+      // 卧槽 卡了我十天半个月 真是深奥
       initItemForUpdate(p, c) {
         c = c || {};
         for (var i in p) {
@@ -198,6 +224,16 @@
         }
         return c;
       },
+      // 待定...
+      searchWay() {
+        for(let i = 0; i < this.contacts.length; i++) {
+          for(let value in this.contacts[i]) {
+            if(this.contacts[i][value] === this.filtersKey) {
+              console.log(this.contacts[i])
+            }
+          }
+        }
+      }
     }
   }
 </script>
@@ -209,5 +245,10 @@
     position: absolute;
     top: 0;
     right: 0;
+  }
+  .searchPos {
+    position: absolute;
+    top: 0;
+    right: 20.833333%
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="sider">
-    <el-col :span="7" class="sider-left">
+    <el-col :span="4" class="sider-left">
       <el-menu router default-active="1">
         <el-menu-item index="1" :route="{path: '/'}">
           <i class="el-icon-message"></i>Contacts
@@ -22,12 +22,6 @@
       return {}
     },
     methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      }
     }
   }
 </script>
