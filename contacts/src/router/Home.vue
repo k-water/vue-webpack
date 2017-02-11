@@ -1,51 +1,80 @@
 <template>
   <div id="home">
-
     <el-col :span="15" class="searchPos">
       <div class="grid-content bg-purple-light">
         <el-input placeholder="请输入你要寻找的内容..." v-model="filtersKey">
-          <el-button slot="append" class="btn" icon="search"></el-button>
+          <el-button slot="append" class="btn" icon="search">
+          </el-button>
         </el-input>
-       </div>
+      </div>
     </el-col>
-
     <!--添加按钮 点击触发dialog-->
     <el-col :span="5" style="background: #e5e9f2" class="pos">
       <div class="grid-content bg-purple-light" style="float: right">
-        <el-button type="primary" @click="openDialog" icon="edit">Add</el-button>
+        <el-button type="primary" @click="openDialog" icon="edit">
+          Add
+        </el-button>
       </div>
     </el-col>
-
     <!--Table展示数据-->
     <el-col :span="20">
       <el-table :data="contacts">
         <el-table-column type="expand">
           <template scope="props">
-            <p>省: {{ props.row.province }}</p>
-            <p>市: {{ props.row.city }}</p>
-            <p>住址: {{ props.row.detailAddress }}</p>
-            <p>邮编: {{ props.row.zip }}</p>
-            <p>生日：{{ props.row.birthday }}</p>
+            <p>
+              省: {{ props.row.province }}
+            </p>
+            <p>
+              市: {{ props.row.city }}
+            </p>
+            <p>
+              住址: {{ props.row.detailAddress }}
+            </p>
+            <p>
+              邮编: {{ props.row.zip }}
+            </p>
+            <p>
+              生日：{{ props.row.birthday }}
+            </p>
+            <p>
+              分组：{{ props.row.group }}
+            </p>
           </template>
         </el-table-column>
-        <el-table-column label="姓名" prop="name" :filters="[{text: filtersKey, value: filtersKey}]">
+        <el-table-column label="姓名" prop="name">
         </el-table-column>
         <el-table-column label="邮箱" prop="email">
         </el-table-column>
         <el-table-column label="电话" prop="phoneNumber">
         </el-table-column>
+        <el-table-column
+          prop="group"
+          label="分组"
+          width="100"
+          :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+          :filter-method="filterTag">
+          <template scope="scope">
+            <el-tag
+              :type="scope.row.group === '家' ? 'primary' : 'success'"
+              close-transition>{{scope.row.group}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template scope="scope">
-            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
+              编辑
+            </el-button>
+            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-col>
-    
     <!--dialog模拟框添加数据-->
     <el-dialog title="添加联系人" v-model="dialogVisible" size="small">
-      <el-form :model="form" :rules="rules" ref="from" :label-position="labelPosition" label-width="120px">
+      <el-form :model="form" :rules="rules" ref="from" :label-position="labelPosition"
+      label-width="120px">
         <el-form-item label="姓名" required>
           <el-input v-model="form.name" auto-complete="off">
           </el-input>
@@ -63,15 +92,19 @@
           </el-input>
         </el-form-item>
         <el-form-item label="生日" prop="birthday" required>
-        <!--
-          <el-input type="text" placeholder="选择日期" style="width: 70%;" v-model="form.birthday">
-          </el-input>
-          -->
-          <el-date-picker type="date" placeholder="选择日期" v-model="form.birthday" style="width: 70%;"></el-date-picker>
+          <el-date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期" v-model="form.birthday"
+          style="width: 70%;">
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="个人主页" prop="site">
           <el-input v-model="form.site" autocomplete="off">
           </el-input>
+        </el-form-item>
+        <el-form-item label="分组" prop="group" required>
+          <el-select v-model="form.group" placeholder="请选择分组" style="width: 100%">
+            <el-option label="家" value="家"></el-option>
+            <el-option label="公司" value="公司"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="地址" prop="address" required>
           <el-input type="textarea" v-model="form.address" style="width: 70%;" auto-complete="off">
@@ -115,7 +148,8 @@
           homeNumber: '',
           birthday: '',
           address: '',
-          site: ''
+          site: '',
+          group: ''
         },
         rules: {
           email: [
@@ -196,7 +230,6 @@
             break;
           }
         }
-        console.log(this.contacts)
         // 关闭dialog
         this.dialogVisible = false
         this.form = {}
@@ -223,6 +256,11 @@
           }
         }
         return c;
+      },
+
+     // 分组过滤method
+     filterTag(value, row) {
+        return row.group === value;
       },
       // 待定...
       searchWay() {
