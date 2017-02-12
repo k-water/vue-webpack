@@ -2,11 +2,13 @@
   <el-col id="group" :span="20">
     <!-- 排序表格 -->
     <el-table :data="groupData" border style="width: 100%" 
-      :default-sort = "{prop: 'date', order: 'descending'}">
+      :default-sort = "{prop: 'date', order: 'descending'}"
+      highlight-current-row @current-change="handleCurrentChange">
       <el-table-column
         prop="name"
         label="姓名"
-        sortable>
+        sortable
+        width="150">
       </el-table-column>
       <el-table-column
         prop="email"
@@ -19,9 +21,17 @@
       </el-table-column>
       <el-table-column
         prop="group"
-        label="分组">
+        label="分组"
+        width="150">
         <template scope="scope">
-          <el-button type="primary"> {{scope.row.group}} </el-button>
+          <el-tag type="primary"> {{scope.row.group}} </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="删除" width="150">
+        <template scope="scope">
+          <el-button type="danger" size="small" @click="delContact(scope.$index, scope.row)">
+            Del
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -32,7 +42,8 @@
   export default {
     data() {
       return {
-        groupData: []
+        groupData: [],
+        currentRow: ''
       }
     },
     mounted () {
@@ -53,6 +64,14 @@
             }
           }
         })
+      },
+      handleCurrentChange(val) {
+        this.currentRow = val
+      },
+      delContact(index, row) {
+        if(confirm('您确认删除吗？')) {
+          this.groupData.splice(index, 1)
+        }
       }
     }
   }

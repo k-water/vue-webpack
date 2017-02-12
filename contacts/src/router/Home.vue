@@ -41,7 +41,7 @@
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="姓名" prop="name">
+        <el-table-column label="姓名" prop="name" width="150">
         </el-table-column>
         <el-table-column label="邮箱" prop="email">
         </el-table-column>
@@ -99,6 +99,8 @@
         <el-form-item label="个人主页" prop="site">
           <el-input v-model="form.site" autocomplete="off">
           </el-input>
+        </el-form-item>
+        <el-form-item>
         </el-form-item>
         <el-form-item label="分组" prop="group" required>
           <el-select v-model="form.group" placeholder="请选择分组" style="width: 100%">
