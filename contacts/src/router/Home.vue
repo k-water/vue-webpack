@@ -175,8 +175,8 @@
     methods: {
       // 数据加载初始化
       init() {
-        this.$http.get('../../static/data/info.json').then((res) => {
-          this.contacts = res.body
+        this.$http.get('../../static/data/info.json', {credentials:true}).then((res) => {
+          this.contacts = res.body.list
         },error => {
           console.log(error)
         })
