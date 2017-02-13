@@ -2,8 +2,8 @@
   <div id="home">
     <el-col :span="15" class="searchPos">
       <div class="grid-content bg-purple-light">
-        <el-input placeholder="请输入你要寻找的内容..." v-model="filtersKey">
-          <el-button slot="append" class="btn" icon="search">
+        <el-input placeholder="请输入你要寻找的内容..." v-model="filtersKey" :keyup.enter="searchWay">
+          <el-button slot="append" class="btn" icon="search" @click="searchWay">
           </el-button>
         </el-input>
       </div>
@@ -18,7 +18,7 @@
     </el-col>
     <!--Table展示数据-->
     <el-col :span="20">
-      <el-table :data="contacts">
+      <el-table :data="contacts" @filter-change="[{text: 'name',value: 'water'}]">
         <el-table-column type="expand">
           <template scope="props">
             <p>
@@ -47,16 +47,12 @@
         </el-table-column>
         <el-table-column label="电话" prop="phoneNumber">
         </el-table-column>
-        <el-table-column
-          prop="group"
-          label="分组"
-          width="100"
-          :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-          :filter-method="filterTag">
+        <el-table-column prop="group" label="分组" width="100" :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+        :filter-method="filterTag">
           <template scope="scope">
-            <el-tag
-              :type="scope.row.group === '家' ? 'primary' : 'success'"
-              close-transition>{{scope.row.group}}</el-tag>
+            <el-tag :type="scope.row.group === '家' ? 'primary' : 'success'" close-transition>
+              {{scope.row.group}}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -104,8 +100,10 @@
         </el-form-item>
         <el-form-item label="分组" prop="group" required>
           <el-select v-model="form.group" placeholder="请选择分组" style="width: 100%">
-            <el-option label="家" value="家"></el-option>
-            <el-option label="公司" value="公司"></el-option>
+            <el-option label="家" value="家">
+            </el-option>
+            <el-option label="公司" value="公司">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="地址" prop="address" required>
@@ -167,7 +165,7 @@
         }
       }
     },
-    mounted () {
+    mounted() {
       this.$nextTick(() => {
         this.init()
       })
@@ -175,9 +173,9 @@
     methods: {
       // 数据加载初始化
       init() {
-        this.$http.get('../../static/data/info.json', {credentials:true}).then((res) => {
+        this.$http.get('../../static/data/info.json', { credentials: true }).then((res) => {
           this.contacts = res.body.list
-        },error => {
+        }, error => {
           console.log(error)
         })
       },
@@ -187,7 +185,7 @@
         this.dialogVisible = true
         this.sure = true
         for (let value in this.form) {
-          this.form[value] = ''
+          this.form[ value ] = ''
         }
       },
 
@@ -203,7 +201,7 @@
 
       // 删除一行数据
       handleDelete(index, row) {
-        if(confirm('您确定删除此联系人吗？')) {
+        if (confirm('您确定删除此联系人吗？')) {
           this.contacts.splice(index, 1);
         }
       },
@@ -211,23 +209,23 @@
       //编辑一行数据
       handleEdit(index, row) {
         this.sure = false
-        this.dialogVisible = true    
+        this.dialogVisible = true
         this.form = this.initItemForUpdate(row)
         this.currentIndex = index
       },
 
       // 修改一行数据
       changeContact() {
-        for(let k = 0; k < this.contacts.length; k++) {
-          if(typeof this.contacts[k]['index'] === 'undefined') {
-            this.$set(this.contacts[k], 'index', k)
+        for (let k = 0; k < this.contacts.length; k++) {
+          if (typeof this.contacts[ k ][ 'index' ] === 'undefined') {
+            this.$set(this.contacts[ k ], 'index', k)
           }
         }
         for (let i = 0; i < this.contacts.length; i++) {
           // 根据主键查找要修改的数据，然后将this.form数据更新到this.contacts[i]
-          if (this.contacts[i]['index'] === this.currentIndex) {
+          if (this.contacts[ i ][ 'index' ] === this.currentIndex) {
             for (let j in this.form) {
-              this.contacts[i][j] = this.form[j]
+              this.contacts[ i ][ j ] = this.form[ j ]
             }
             break;
           }
@@ -260,18 +258,31 @@
         return c;
       },
 
-     // 分组过滤method
-     filterTag(value, row) {
+      // 分组过滤method
+      filterTag(value, row) {
         return row.group === value;
       },
       // 待定...
       searchWay() {
-        for(let i = 0; i < this.contacts.length; i++) {
-          for(let value in this.contacts[i]) {
-            if(this.contacts[i][value] === this.filtersKey) {
-              console.log(this.contacts[i])
+        if(this.filtersKey === '') {
+          confirm('您输入的内容为空...')
+        } else {
+          let flag = false
+          for (let i = 0; i < this.contacts.length; i++) {
+            for (let value in this.contacts[ i ]) {
+              if (this.contacts[ i ][ value ] === this.filtersKey) {
+                flag = true
+                confirm('该联系人为：' + '\n'
+                        + '姓名：' + this.contacts[i]['name'])
+                continue ;
+              }
             }
           }
+          console.log(flag)
+          if(flag === false) {
+              confirm('不存在此联系人')
+          }
+          this.filtersKey = ''
         }
       }
     }
